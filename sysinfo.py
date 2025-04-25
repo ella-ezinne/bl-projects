@@ -1,33 +1,39 @@
 import platform
 import psutil
 import socket
+import json
 import os
 from datetime import datetime, timedelta
 
 def get_system_info():
-    print("=== System Information ===")
-    print(f"System: {platform.system()}")
-    print(f"Node Name: {platform.node()}")
-    print(f"Release: {platform.release()}")
-    print(f"Version: {platform.version()}")
-    print(f"Machine: {platform.machine()}")
-    print(f"Processor: {platform.processor()}")
+    return{
+        "System": platform.system(),
+        "Node Name": platform.node(),
+        "Release": platform.release(),
+        "Version": platform.version(),
+        "Machine": platform.machine(),
+        "Processor": platform.processor()
+    }
+    
 
 def get_cpu_info():
-    print("\n===CPU Info ===")
-    print(f"Physical cores: {psutil.cpu_count(logical=False)}")
-    print(f"Total cores: {psutil.cpu_count(logical=True)}")
-    print(f"CPU usage per core:")
-    for i, percentage in enumerate(psutil.cpu_percent(percpu=True, interval=1)):
-        print(f"  Core {i}: {percentage}%")
-    print(f"Total CPU Usage: {psutil.cpu_percent()}%")
+    return{
+        "Physical cores": psutil.cpu_count(logical=False),
+        "Total cores": psutil.cpu_count(logical=True),
+        "CPU usage per core": [f"Core {i}: {percentage}%" for i, percentage in enumerate(psutil.cpu_percent(percpu=True, interval=1))],
+
+        "Total CPU Usage": f"{psutil.cpu_percent()}%"
+    }
+
 
 def get_memory_info():
-    print("\n=== Memory Info ===")
     mem = psutil.virtual_memory()
-    print(f"Total: {get_size(mem.total)}")
-    print(f"Available: {get_size(mem.available)}")
-    print(f"Used: {get_size(mem.used)} ({mem.percent}%)")
+    return{
+        "Total Memory": get_size(mem.total),
+        "Available Memory": get_size(mem.available),
+        "Used Memory": get_size(mem.used),
+        "Memory Usage Percentage": f"{mem.percent}%"
+    }
 
 def get_disk_info():
     print("\n=== Disk Info ===")
