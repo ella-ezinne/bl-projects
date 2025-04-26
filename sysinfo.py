@@ -36,14 +36,18 @@ def get_memory_info():
     }
 
 def get_disk_info():
-    print("\n=== Disk Info ===")
+    disks = {}
     for partition in psutil.disk_partitions():
-        print(f"Device: {partition.device}")
         usage = psutil.disk_usage(partition.mountpoint)
-        print(f"  Total Size: {get_size(usage.total)}")
-        print(f"  Used: {get_size(usage.used)}")
-        print(f"  Free: {get_size(usage.free)}")
-        print(f"  Percentage: {usage.percent}%")
+        disks[partition.device] = {
+            "Mountpoint": partition.mountpoint,
+            "File System Type": partition.fstype,
+            "Total Size": get_size(usage.total),
+            "Used": get_size(usage.used),
+            "Free": get_size(usage.free),
+            "Percentage": f"{usage.percent}%"
+        }
+    return disks
 
 def get_network_info():
     print("\n=== Network Info ===")
