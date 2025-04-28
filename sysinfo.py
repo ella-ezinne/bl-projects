@@ -50,19 +50,22 @@ def get_disk_info():
     return disks
 
 def get_network_info():
-    print("\n=== Network Info ===")
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
-    print(f"Hostname: {hostname}")
-    print(f"IP Address: {ip_address}")
+    return{
+        "HOstname": hostname,
+        "IP Address": ip_address
+    }
+
 
 def get_up_time():
-    print("\n=== System Uptime ===")
     boot_time = datetime.fromtimestamp(psutil.boot_time())
     now = datetime.now()
     uptime = now - boot_time
-    print(f"Boot Time: {boot_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Uptime: {str(uptime).split('.')[0]}")
+    return{
+        "Boot Time": boot_time.strftime('%Y-%m-%d %H:%M:%S'),
+        "Uptime": str(uptime).split('.')[0]
+    }
 
 def get_size(bytes, suffix="B"):
     factor = 1024
@@ -72,9 +75,18 @@ def get_size(bytes, suffix="B"):
         bytes /= factor
 
 if __name__== "__main__":
-    get_system_info()
-    get_cpu_info()
-    get_memory_info()
-    get_disk_info()
-    get_network_info()
-    get_up_time()
+    system_data = {
+        "System Info": get_system_info(),
+        "CPU Info": get_cpu_info(),
+        "Memory Info": get_memory_info(),
+        "Disk Info": get_disk_info(),
+        "Network Info": get_network_info(),
+        "Uptime": get_up_time()
+    }
+
+    #Save to JSON file
+    with open("system_report.json", "w") as f:
+        json.dump(system_data, f, indent=4)
+
+    print("✅ System info saved to system_report.json")
+   
